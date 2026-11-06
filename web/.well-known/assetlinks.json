@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.pickleo.pickleo",
+      "sha256_cert_fingerprints": [
+        "81:EE:5B:38:7F:70:60:1E:E9:EF:D5:A6:CA:5D:08:2B:69:B9:4E:46:C7:87:77:3D:54:21:C1:CA:71:72:EC:A5"
+      ]
+    }
+  }
+]

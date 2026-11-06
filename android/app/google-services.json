@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1070966647789",
+    "project_id": "pickleo-67911",
+    "storage_bucket": "pickleo-67911.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070966647789:android:3a548e3414b1f3c3cd95e4",
+        "android_client_info": {
+          "package_name": "com.pickleo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxQiaIcnrjb0TvOC8jOfz3_8Xqy-7YJQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
