@@ -10,24 +10,33 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Determine if device is a tablet based on shortest display side (>= 600dp)
-  final view = WidgetsBinding.instance.platformDispatcher.views.firstOrNull;
-  final pixelRatio = (view?.devicePixelRatio ?? 1.0) > 0 ? (view?.devicePixelRatio ?? 1.0) : 1.0;
-  final isTablet = view != null && (view.physicalSize.shortestSide / pixelRatio) >= 600;
+  try {
+    final view = WidgetsBinding.instance.platformDispatcher.views.firstOrNull;
+    final pixelRatio =
+        (view?.devicePixelRatio ?? 1.0) > 0 ? (view?.devicePixelRatio ?? 1.0) : 1.0;
+    final isTablet =
+        view != null && (view.physicalSize.shortestSide / pixelRatio) >= 600;
 
-  if (isTablet) {
-    // Enable full rotation (portrait & landscape) on iPad and Android tablets
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-  } else {
-    // Keep mobile phones in portrait
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    if (isTablet) {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
+  } catch (_) {
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    } catch (_) {}
   }
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

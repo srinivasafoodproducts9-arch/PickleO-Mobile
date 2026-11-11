@@ -64,48 +64,19 @@ class NotificationService {
     if (_isInitialized) return;
 
     try {
-      // 1. Initialize Firebase Core
-      if (Firebase.apps.isEmpty) {
-        if (!kIsWeb && Platform.isAndroid) {
-          // On Android, use the options matching google-services.json
+      // On Android: initialize Firebase and FCM
+      if (!kIsWeb && Platform.isAndroid) {
+        if (Firebase.apps.isEmpty) {
           await Firebase.initializeApp(options: pickleoFirebaseOptions);
-        } else if (!kIsWeb && Platform.isIOS) {
-          try {
-            await Firebase.initializeApp(
-              options: const FirebaseOptions(
-                apiKey: 'AIzaSyCxQiaIcnrjb0TvOC8jOfz3_8Xqy-7YJQI',
-                appId: '1:1070966647789:ios:3a548e3414b1f3c3cd95e4',
-                messagingSenderId: '1070966647789',
-                projectId: 'pickleo-67911',
-                storageBucket: 'pickleo-67911.firebasestorage.app',
-                iosBundleId: 'com.pickleo.pickleo',
-              ),
-            );
-          } catch (iosFirebaseError) {
-            debugPrint('[NotificationService] iOS Firebase initialize fallback: $iosFirebaseError');
-          }
-        } else {
-          await Firebase.initializeApp();
         }
-      }
-
-      // 2. Setup Local Notifications (Foreground / Heads-up notifications)
-      await _setupLocalNotifications();
-
-      // 3. Setup FCM handlers & background handler only when Firebase is ready
-      if (Firebase.apps.isNotEmpty) {
-        if (!kIsWeb && Platform.isAndroid) {
-          FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-        }
-
-        // 4. Request initial permission & fetch token
+        await _setupLocalNotifications();
+        FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
         await requestNotificationPermission();
-
-        // 5. Setup foreground & background message listeners
         _setupMessageListeners();
-
-        // 6. Check if app was opened from terminated state by a notification
         await _checkInitialMessage();
+      } else {
+        // On iOS & Web: only initialize local notifications (skip Firebase to prevent native iOS crash)
+        await _setupLocalNotifications();
       }
 
       _isInitialized = true;
@@ -179,6 +150,7 @@ class NotificationService {
 
   /// Returns FCM device registration token
   Future<String?> getFcmToken() async {
+    if (Firebase.apps.isEmpty) return null;
     if (_cachedFcmToken != null && _cachedFcmToken!.isNotEmpty) {
       return _cachedFcmToken;
     }
@@ -202,6 +174,7 @@ class NotificationService {
   /// Returns the three push fields (fcmToken, deviceId, platform) together
   /// or null if notification permission is unavailable or token is absent.
   Future<Map<String, String>?> getPushCredentials() async {
+    if (Firebase.apps.isEmpty) return null;
     try {
       final settings =
           await FirebaseMessaging.instance.getNotificationSettings();
