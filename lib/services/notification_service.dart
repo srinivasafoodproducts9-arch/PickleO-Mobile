@@ -69,6 +69,21 @@ class NotificationService {
         if (!kIsWeb && Platform.isAndroid) {
           // On Android, use the options matching google-services.json
           await Firebase.initializeApp(options: pickleoFirebaseOptions);
+        } else if (!kIsWeb && Platform.isIOS) {
+          try {
+            await Firebase.initializeApp(
+              options: const FirebaseOptions(
+                apiKey: 'AIzaSyCxQiaIcnrjb0TvOC8jOfz3_8Xqy-7YJQI',
+                appId: '1:1070966647789:ios:3a548e3414b1f3c3cd95e4',
+                messagingSenderId: '1070966647789',
+                projectId: 'pickleo-67911',
+                storageBucket: 'pickleo-67911.firebasestorage.app',
+                iosBundleId: 'com.pickleo.pickleo',
+              ),
+            );
+          } catch (iosFirebaseError) {
+            debugPrint('[NotificationService] iOS Firebase initialize fallback: $iosFirebaseError');
+          }
         } else {
           await Firebase.initializeApp();
         }
@@ -77,17 +92,21 @@ class NotificationService {
       // 2. Setup Local Notifications (Foreground / Heads-up notifications)
       await _setupLocalNotifications();
 
-      // 3. Setup FCM handlers & background handler
-      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+      // 3. Setup FCM handlers & background handler only when Firebase is ready
+      if (Firebase.apps.isNotEmpty) {
+        if (!kIsWeb && Platform.isAndroid) {
+          FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+        }
 
-      // 4. Request initial permission & fetch token
-      await requestNotificationPermission();
+        // 4. Request initial permission & fetch token
+        await requestNotificationPermission();
 
-      // 5. Setup foreground & background message listeners
-      _setupMessageListeners();
+        // 5. Setup foreground & background message listeners
+        _setupMessageListeners();
 
-      // 6. Check if app was opened from terminated state by a notification
-      await _checkInitialMessage();
+        // 6. Check if app was opened from terminated state by a notification
+        await _checkInitialMessage();
+      }
 
       _isInitialized = true;
       debugPrint('[NotificationService] Initialized successfully');

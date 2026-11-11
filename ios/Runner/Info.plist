@@ -49,6 +49,10 @@
 	<string>PickleO requires your location to detect your delivery address and show nearby pickle deliveries.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>PickleO requires your location to detect your delivery address accurately.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PickleO requires access to your photo library to select a profile photo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>PickleO requires access to your camera to take a profile photo.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

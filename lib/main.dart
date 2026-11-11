@@ -36,12 +36,10 @@ void main() async {
     ),
   );
 
-  // Initialize Firebase and Push Notification Service
-  try {
-    await NotificationService.instance.initialize();
-  } catch (e) {
+  // Initialize Firebase and Push Notification Service safely without blocking UI
+  NotificationService.instance.initialize().catchError((e) {
     debugPrint('Notification service initialization exception: $e');
-  }
+  });
 
   runApp(const PickleOApp());
 }
