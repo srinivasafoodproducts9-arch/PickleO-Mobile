@@ -16,10 +16,10 @@ import FirebaseCore
         FirebaseApp.configure(options: options)
       } else {
         let options = FirebaseOptions(
-          googleAppID: "1:1070966647789:ios:3a548e3414b1f3c3cd95e4",
+          googleAppID: "1:1070966647789:ios:d77684056e9a2722cd95e4",
           gcmSenderID: "1070966647789"
         )
-        options.apiKey = "AIzaSyCxQiaIcnrjb0TvOC8jOfz3_8Xqy-7YJQI"
+        options.apiKey = "AIzaSyAEy65b4TguhBWPlBorLAA1idO0VG2IQZk"
         options.projectID = "pickleo-67911"
         options.storageBucket = "pickleo-67911.firebasestorage.app"
         FirebaseApp.configure(options: options)
